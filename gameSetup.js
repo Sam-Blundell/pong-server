@@ -24,12 +24,14 @@ const initialClients = {
     playerTwo: null,
 };
 
-const gameSetup = () => {
+const gameSetup = (player) => {
     const game = {
         clients: { ...initialClients },
         keys: { ...validKeys },
         gameState: { ...initialGameState },
+        ready: false,
     };
+    game.clients.playerOne = player;
     return game;
 };
 
