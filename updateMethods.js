@@ -4,6 +4,7 @@ const paddleSpeed = 5;
 const ballRightBoundary = 493;
 const ballLeftBoundary = 0;
 const ballMaxVSpeed = 10;
+const ballMaxHSpeed = 6;
 const screenTop = 0;
 const screenBottom = 693;
 const playerOneBottom = 657;
@@ -28,7 +29,13 @@ const ballUpdate = (game) => {
     const paddleCollisionCheck = (playerPos, ballPos) => {
         if (ballPos + ballWidth >= playerPos && ballPos <= playerPos + paddleWidth) {
             const speedMod = Math.abs(gameState.ballVSpeed) > ballMaxVSpeed ? -1 : -1.05;
+            const offSet = ((ballPos + (ballWidth / 2) - (playerPos + (paddleWidth / 2))) / 10);
+
             gameState.ballVSpeed *= speedMod;
+            gameState.ballHSpeed = Math.min(
+                Math.max(gameState.ballHSpeed + offSet, -ballMaxHSpeed),
+                ballMaxHSpeed,
+            );
         }
     };
 
