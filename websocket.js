@@ -8,9 +8,9 @@ const setupSocketServer = (server) => {
 
     const games = {};
 
-    const playerOneSetup = (gameID) => {
-        const { playerOne: socket } = games[gameID].clients;
-        const { playerOne: keys } = games[gameID].keys;
+    const playerSetup = (gameID, player) => {
+        const { [player]: socket } = games[gameID].clients;
+        const { [player]: keys } = games[gameID].keys;
         const { gameState } = games[gameID];
 
         socket.on('message', (data) => {
@@ -20,26 +20,7 @@ const setupSocketServer = (server) => {
                 keys[input] = action;
             }
             if ('updateState' in parsedData) {
-                playerUpdate(keys, games[gameID], 'playerOnePos');
-                ballUpdate(games[gameID]);
-                const msg = JSON.stringify({ gameState });
-                socket.send(msg);
-            }
-        });
-    };
-    const playerTwoSetup = (gameID) => {
-        const { playerTwo: socket } = games[gameID].clients;
-        const { playerTwo: keys } = games[gameID].keys;
-        const { gameState } = games[gameID];
-
-        socket.on('message', (data) => {
-            const parsedData = JSON.parse(data);
-            if ('inputData' in parsedData) {
-                const [input, action] = parsedData.inputData;
-                keys[input] = action;
-            }
-            if ('updateState' in parsedData) {
-                playerUpdate(keys, games[gameID], 'playerTwoPos');
+                playerUpdate(keys, games[gameID], `${player}Pos`);
                 ballUpdate(games[gameID]);
                 const msg = JSON.stringify({ gameState });
                 socket.send(msg);
@@ -52,7 +33,7 @@ const setupSocketServer = (server) => {
             const gameID = nanoid(6);
             games[gameID] = gameSetup(socket, gameID);
             socket.send(JSON.stringify({ gameID }));
-            playerOneSetup(gameID);
+            playerSetup(gameID, 'playerOne');
         } else if (request.url.startsWith('/join')) {
             const gameID = request.url.slice('5');
             if (gameID in games === false) {
@@ -64,7 +45,7 @@ const setupSocketServer = (server) => {
             } else {
                 games[gameID].clients.playerTwo = socket;
                 games[gameID].ready = true;
-                playerTwoSetup(gameID);
+                playerSetup(gameID, 'playerTwo');
                 games[gameID].clients.playerOne.send(JSON.stringify({ opponentConnected: true }));
             }
         }
