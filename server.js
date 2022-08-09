@@ -7,6 +7,9 @@ const app = express();
 const server = http.createServer(app);
 setupSocketServer(server);
 
+app.use('/pong', express.static('client'));
+app.use('/pong/join/:gameid', express.static('client'));
+
 app.route('/')
     .get((req, res) => {
         res.status(200).send({ msg: 'hello world' });
