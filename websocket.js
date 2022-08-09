@@ -1,7 +1,7 @@
 import { WebSocketServer } from 'ws';
 import { nanoid } from 'nanoid/non-secure';
 import gameSetup from './gameSetup.js';
-import playerUpdate from './updateMethods.js';
+import { playerUpdate, ballUpdate } from './updateMethods.js';
 
 const setupSocketServer = (server) => {
     const wss = new WebSocketServer({ server, clientTracking: true });
@@ -21,13 +21,10 @@ const setupSocketServer = (server) => {
             }
             if ('updateState' in parsedData) {
                 playerUpdate(keys, games[gameID], 'playerOnePos');
+                ballUpdate(games[gameID]);
                 const msg = JSON.stringify({ gameState });
                 socket.send(msg);
             }
-        });
-        socket.on('close', (data) => {
-            const parsedData = JSON.parse(data);
-            console.log(parsedData);
         });
     };
     const playerTwoSetup = (gameID) => {
@@ -43,13 +40,10 @@ const setupSocketServer = (server) => {
             }
             if ('updateState' in parsedData) {
                 playerUpdate(keys, games[gameID], 'playerTwoPos');
+                ballUpdate(games[gameID]);
                 const msg = JSON.stringify({ gameState });
                 socket.send(msg);
             }
-        });
-        socket.on('close', (data) => {
-            const parsedData = JSON.parse(data);
-            console.log(parsedData);
         });
     };
 
