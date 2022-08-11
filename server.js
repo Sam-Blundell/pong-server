@@ -12,7 +12,7 @@ app.use('/pong/join/:gameid', express.static('client'));
 
 app.route('/')
     .get((req, res) => {
-        res.status(200).send({ msg: 'hello world' });
+        res.status(301).redirect(301, '/pong');
     })
     .all(errorMethodNotAllowed);
 
