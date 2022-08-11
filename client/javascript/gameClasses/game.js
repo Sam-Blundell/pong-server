@@ -1,7 +1,7 @@
 import InputHandler from '../inputHandler.js';
 import Ball from '../ball.js';
-import PlayerOnePaddle from '../paddleClasses.js/playerOnePaddle.js';
-import PlayerTwoPaddle from '../paddleClasses.js/playerTwoPaddle.js';
+import PlayerOnePaddle from '../paddleClasses/playerOnePaddle.js';
+import PlayerTwoPaddle from '../paddleClasses/playerTwoPaddle.js';
 import UI from '../UI.js';
 
 export default class Game {
