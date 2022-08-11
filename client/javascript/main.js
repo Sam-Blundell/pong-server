@@ -1,4 +1,5 @@
-import { PlayerOne, PlayerTwo } from './game.js';
+import PlayerOne from './gameClasses/playerOne.js';
+import PlayerTwo from './gameClasses/playerTwo.js';
 
 let urlID = '';
 if (window.location.href.indexOf('/join/') !== -1) {
