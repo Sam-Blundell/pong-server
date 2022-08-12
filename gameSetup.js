@@ -1,12 +1,7 @@
 const validKeys = {
-    playerOne: {
-        ArrowLeft: false,
-        ArrowRight: false,
-    },
-    playerTwo: {
-        ArrowLeft: false,
-        ArrowRight: false,
-    },
+    // first byte is ArrowLeft, second is ArrowRight.
+    playerOne: new ArrayBuffer(2),
+    playerTwo: new ArrayBuffer(2),
 };
 
 const initialGameState = {
