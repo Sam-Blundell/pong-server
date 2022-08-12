@@ -3,16 +3,20 @@ export default class ServerConnection {
         this.game = game;
         this.connected = false;
         this.socket = new WebSocket(this.game.url);
+        this.socket.binaryType = 'arraybuffer';
         this.handShake();
         this.gameStateListener();
         this.disconnectListener();
     }
 
-    sendInput(input, action) {
-        const data = JSON.stringify({
-            inputData: [input, action],
-        });
-        this.socket.send(data);
+    sendInput(key, action) {
+        const inputBuffer = new ArrayBuffer(3);
+        // first byte: identifier, second byte: key, third byte: action.
+        const inputView = new DataView(inputBuffer);
+        inputView.setUint8(0, 10);
+        inputView.setUint8(1, key);
+        inputView.setUint8(2, action);
+        this.socket.send(inputBuffer);
     }
 
     handShake() {

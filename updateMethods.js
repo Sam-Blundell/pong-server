@@ -16,9 +16,10 @@ const paddleWidth = 60;
 
 const playerUpdate = (keys, game, playerPos) => {
     const { gameState } = game;
-    if (keys.ArrowRight === true && gameState[playerPos] < paddleRightBoundary) {
+    const inputView = new DataView(keys);
+    if (inputView.getUint8(1) === 1 && gameState[playerPos] < paddleRightBoundary) {
         gameState[playerPos] += paddleSpeed;
-    } else if (keys.ArrowLeft === true && gameState[playerPos] > paddleLeftBoundary) {
+    } else if (inputView.getUint8(0) === 1 && gameState[playerPos] > paddleLeftBoundary) {
         gameState[playerPos] -= paddleSpeed;
     }
 };
