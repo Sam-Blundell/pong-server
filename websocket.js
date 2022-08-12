@@ -15,7 +15,7 @@ const setupSocketServer = (server) => {
             socket.send(JSON.stringify({ gameID }));
             playerSetup(games[gameID], 'playerOne');
         } else if (request.url.startsWith('/join')) {
-            const gameID = request.url.slice('5');
+            const gameID = request.url.slice('6');
             if (gameID in games === false) {
                 socket.send(JSON.stringify({ ERR: 'NoSuchGame' }));
                 socket.close();
