@@ -31,7 +31,7 @@ export default class ServerConnection {
             if ('gameID' in parsedData) {
                 this.game.gameID = parsedData.gameID;
             }
-            if ('gameState' in parsedData) {
+            if ('gameState' in parsedData) { // here
                 this.game.gameState = parsedData.gameState;
             }
             if ('opponentConnected' in parsedData) {
