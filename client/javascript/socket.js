@@ -27,18 +27,25 @@ export default class ServerConnection {
 
     gameStateListener() {
         this.socket.addEventListener('message', (event) => {
-            const parsedData = JSON.parse(event.data);
-            if ('gameID' in parsedData) {
-                this.game.gameID = parsedData.gameID;
-            }
-            if ('gameState' in parsedData) { // here
-                this.game.gameState = parsedData.gameState;
-            }
-            if ('opponentConnected' in parsedData) {
-                this.game.opponentConnected = true;
-            }
-            if ('opponentDisconnected' in parsedData) {
-                this.game.opponentConnected = false;
+            if (event.data instanceof ArrayBuffer) {
+                const stateView = new DataView(event.data);
+                this.game.gameState.playerOnePos = stateView.getUint16(1);
+                this.game.gameState.playerTwoPos = stateView.getUint16(3);
+                this.game.gameState.ballXPos = stateView.getUint16(5);
+                this.game.gameState.ballYPos = stateView.getUint16(7);
+                this.game.gameState.score[0] = stateView.getUint8(17);
+                this.game.gameState.score[1] = stateView.getUint8(18);
+            } else {
+                const parsedData = JSON.parse(event.data);
+                if ('gameID' in parsedData) {
+                    this.game.gameID = parsedData.gameID;
+                }
+                if ('opponentConnected' in parsedData) {
+                    this.game.opponentConnected = true;
+                }
+                if ('opponentDisconnected' in parsedData) {
+                    this.game.opponentConnected = false;
+                }
             }
         });
     }
