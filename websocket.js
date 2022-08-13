@@ -39,14 +39,15 @@ const setupSocketServer = (server) => {
         const activeGames = Object.values(games);
         activeGames.forEach((game) => {
             if (game.ready === true) {
-                playerUpdate(game.keys.playerOne, game, 'playerOnePos');
-                playerUpdate(game.keys.playerTwo, game, 'playerTwoPos');
+                playerUpdate(game.keys.playerOne, game, 1);
+                playerUpdate(game.keys.playerTwo, game, 3);
                 ballUpdate(game);
                 const { playerOne, playerTwo } = game.clients;
-                const { gameState } = game;
-                const msg = JSON.stringify({ gameState }); // here
-                playerOne.send(msg);
-                playerTwo.send(msg);
+                playerOne.binaryType = 'arraybuffer';
+                playerTwo.binaryType = 'arraybuffer';
+                // TODO: only send needed parts of gamestate, over a third wasted.
+                playerOne.send(game.binaryGameState);
+                playerTwo.send(game.binaryGameState);
             }
         });
     };

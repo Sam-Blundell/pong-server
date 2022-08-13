@@ -14,59 +14,70 @@ const playerTwoTop = 50;
 const ballWidth = 7;
 const paddleWidth = 60;
 
-const playerUpdate = (keys, game, playerPos) => {
-    const { gameState } = game;
+// this is a mess and needs either commenting or refactoring.
+
+const playerUpdate = (keys, game, playerIndex) => {
+    const stateView = new DataView(game.binaryGameState);
     const inputView = new DataView(keys);
-    if (inputView.getUint8(1) === 1 && gameState[playerPos] < paddleRightBoundary) {
-        gameState[playerPos] += paddleSpeed;
-    } else if (inputView.getUint8(0) === 1 && gameState[playerPos] > paddleLeftBoundary) {
-        gameState[playerPos] -= paddleSpeed;
+    if (inputView.getUint8(1) === 1 && stateView.getUint16(playerIndex) < paddleRightBoundary) {
+        stateView.setUint16(playerIndex, stateView.getUint16(playerIndex) + paddleSpeed);
+    } else if (
+        inputView.getUint8(0) === 1
+        && stateView.getUint16(playerIndex) > paddleLeftBoundary
+    ) {
+        stateView.setUint16(playerIndex, stateView.getUint16(playerIndex) - paddleSpeed);
     }
 };
 
 const ballUpdate = (game) => {
-    const { gameState } = game;
+    const stateView = new DataView(game.binaryGameState);
 
     const paddleCollisionCheck = (playerPos, ballPos) => {
         if (ballPos + ballWidth >= playerPos && ballPos <= playerPos + paddleWidth) {
-            const speedMod = Math.abs(gameState.ballVSpeed) > ballMaxVSpeed ? -1 : -1.05;
+            const speedMod = Math.abs(stateView.getFloat32(13)) > ballMaxVSpeed ? -1 : -1.05;
             const offSet = ((ballPos + (ballWidth / 2) - (playerPos + (paddleWidth / 2))) / 10);
 
-            gameState.ballVSpeed *= speedMod;
-            gameState.ballHSpeed = Math.min(
-                Math.max(gameState.ballHSpeed + offSet, -ballMaxHSpeed),
-                ballMaxHSpeed,
+            stateView.setFloat32(
+                9,
+                Math.min(Math.max(stateView.getFloat32(9) + offSet, -ballMaxHSpeed), ballMaxHSpeed),
             );
+            stateView.setFloat32(13, stateView.getFloat32(13) * speedMod);
         }
     };
 
     const resetPositions = () => {
-        gameState.playerOnePos = 220;
-        gameState.playerTwoPos = 220;
-        gameState.ballHSpeed = 1;
-        gameState.ballVSpeed = 3;
-        gameState.ballXPos = 246;
-        gameState.ballYPos = 346;
+        stateView.setUint16(1, 220);
+        stateView.setUint16(3, 220);
+        stateView.setUint16(5, 246);
+        stateView.setUint16(7, 346);
+        stateView.setFloat32(9, 1);
+        stateView.setFloat32(13, 3);
     };
 
-    gameState.ballYPos += gameState.ballVSpeed;
-    gameState.ballXPos += gameState.ballHSpeed;
-    if (gameState.ballYPos <= screenTop) {
-        gameState.score[0] += 1;
+    stateView.setUint16(5, stateView.getUint16(5) + Math.round(stateView.getFloat32(9)));
+    stateView.setUint16(7, stateView.getUint16(7) + Math.round(stateView.getFloat32(13)));
+
+    if (stateView.getUint16(7) <= screenTop) {
+        stateView.setUint8(17, stateView.getUint8(17) + 1);
         resetPositions();
-    }
-    if (gameState.ballYPos >= screenBottom) {
-        gameState.score[1] += 1;
+    } else if (stateView.getUint16(7) >= screenBottom) {
+        stateView.setUint8(18, stateView.getUint8(18) + 1);
         resetPositions();
-    }
-    if (gameState.ballXPos >= ballRightBoundary || gameState.ballXPos <= ballLeftBoundary) {
-        gameState.ballHSpeed *= -1;
-    }
-    if ((gameState.ballYPos + ballWidth > playerOneTop) && (gameState.ballYPos < playerOneBottom)) {
-        paddleCollisionCheck(gameState.playerOnePos, gameState.ballXPos);
-    }
-    if ((gameState.ballYPos + ballWidth > playerTwoTop) && (gameState.ballYPos < playerTwoBottom)) {
-        paddleCollisionCheck(gameState.playerTwoPos, gameState.ballXPos);
+    } else if (
+        stateView.getUint16(5) >= ballRightBoundary
+        || stateView.getUint16(5) <= ballLeftBoundary
+    ) {
+        stateView.setFloat32(9, stateView.getFloat32(9) * -1);
+    } else if (
+        (stateView.getUint16(7) + ballWidth > playerOneTop)
+        && (stateView.getUint16(7) < playerOneBottom)
+    ) {
+        paddleCollisionCheck(stateView.getUint16(1), stateView.getUint16(5));
+    } else if (
+        (stateView.getUint16(7) + ballWidth > playerTwoTop)
+        && (stateView.getUint16(7) < playerTwoBottom)
+    ) {
+        paddleCollisionCheck(stateView.getUint16(3), stateView.getUint16(5));
     }
 };
 
