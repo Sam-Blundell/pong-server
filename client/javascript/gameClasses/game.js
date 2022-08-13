@@ -20,7 +20,6 @@ export default class Game {
 
     update() {
         if (this.server.connected === true && this.opponentConnected === true) {
-            this.server.socket.send(JSON.stringify({ updateState: true }));
             const {
                 playerOnePos,
                 playerTwoPos,

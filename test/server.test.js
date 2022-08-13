@@ -4,11 +4,7 @@ import { app } from '../server.js';
 
 describe('app Testing', () => {
     describe('hello world', () => {
-        it('GET:200, should respond with "hello world".', () => request(app).get('/')
-            .expect(200)
-            .then((response) => {
-                expect(response.body.msg).to.equal('hello world');
-            }));
+        it('GET:301, should respond with 301 status.', () => request(app).get('/').expect(301));
     });
     describe('forbidden methods', () => {
         it('POST/PATCH/ETC:405, should return 405 method not allowed when / is given anything other than a get request', () => request(app).post('/')
