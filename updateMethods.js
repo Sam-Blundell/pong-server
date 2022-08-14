@@ -35,7 +35,7 @@ const ballUpdate = (game) => {
     const paddleCollisionCheck = (playerPos, ballPos) => {
         if (ballPos + ballWidth >= playerPos && ballPos <= playerPos + paddleWidth) {
             const speedMod = Math.abs(stateView.getFloat32(13)) > ballMaxVSpeed ? -1 : -1.05;
-            const offSet = ((ballPos + (ballWidth / 2) - (playerPos + (paddleWidth / 2))) / 10);
+            const offSet = ((ballPos + (ballWidth / 2) - (playerPos + (paddleWidth / 2))) / 15);
 
             stateView.setFloat32(
                 9,
