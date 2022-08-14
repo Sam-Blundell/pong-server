@@ -28,13 +28,14 @@ export default class ServerConnection {
     gameStateListener() {
         this.socket.addEventListener('message', (event) => {
             if (event.data instanceof ArrayBuffer) {
-                const stateView = new DataView(event.data);
-                this.game.gameState.playerOnePos = stateView.getUint16(1);
-                this.game.gameState.playerTwoPos = stateView.getUint16(3);
-                this.game.gameState.ballXPos = stateView.getUint16(5);
-                this.game.gameState.ballYPos = stateView.getUint16(7);
-                this.game.gameState.score[0] = stateView.getUint8(17);
-                this.game.gameState.score[1] = stateView.getUint8(18);
+                const updateView = new DataView(event.data);
+                const { stateView } = this.game;
+                stateView.setUint16(0, updateView.getUint16(1));
+                stateView.setUint16(2, updateView.getUint16(3));
+                stateView.setUint16(4, updateView.getUint16(5));
+                stateView.setUint16(6, updateView.getUint16(7));
+                stateView.setUint8(8, updateView.getUint8(17));
+                stateView.setUint8(9, updateView.getUint8(18));
             } else {
                 const parsedData = JSON.parse(event.data);
                 if ('gameID' in parsedData) {
