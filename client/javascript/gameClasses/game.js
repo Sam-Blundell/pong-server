@@ -20,15 +20,9 @@ export default class Game {
 
     update() {
         if (this.server.connected === true && this.opponentConnected === true) {
-            const {
-                playerOnePos,
-                playerTwoPos,
-                ballXPos,
-                ballYPos,
-            } = this.gameState;
-            this.playerOnePaddle.update(playerOnePos);
-            this.playerTwoPaddle.update(playerTwoPos);
-            this.ball.update(ballXPos, ballYPos);
+            this.playerOnePaddle.update(this.gameState.playerOnePos);
+            this.playerTwoPaddle.update(this.gameState.playerTwoPos);
+            this.ball.update(this.gameState.ballXPos, this.gameState.ballYPos);
         }
     }
 
