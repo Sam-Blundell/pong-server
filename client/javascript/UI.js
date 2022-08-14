@@ -16,7 +16,7 @@ export default class UI {
         context.stroke();
         context.font = `${this.fontSize}px ${this.fontFamily}`;
         context.fillText(`${this.game.gameID}`, 420, 20);
-        context.fillText(`${this.game.gameState.score[1]}`, 5, 20);
-        context.fillText(`${this.game.gameState.score[0]}`, 5, 690);
+        context.fillText(`${this.game.stateView.getUint8(9)}`, 5, 20);
+        context.fillText(`${this.game.stateView.getUint8(8)}`, 5, 690);
     }
 }
