@@ -13,16 +13,15 @@ export default class Game {
         this.playerOnePaddle = new PlayerOnePaddle(this);
         this.playerTwoPaddle = new PlayerTwoPaddle(this);
         this.ball = new Ball(this);
-        this.gameState = {
-            score: [0, 0],
-        };
+        this.stateBuffer = new ArrayBuffer(10);
+        this.stateView = new DataView(this.stateBuffer);
     }
 
     update() {
         if (this.server.connected === true && this.opponentConnected === true) {
-            this.playerOnePaddle.update(this.gameState.playerOnePos);
-            this.playerTwoPaddle.update(this.gameState.playerTwoPos);
-            this.ball.update(this.gameState.ballXPos, this.gameState.ballYPos);
+            this.playerOnePaddle.update(this.stateView.getUint16(0));
+            this.playerTwoPaddle.update(this.stateView.getUint16(2));
+            this.ball.update(this.stateView.getUint16(4), this.stateView.getUint16(6));
         }
     }
 
