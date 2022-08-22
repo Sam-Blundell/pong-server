@@ -1,8 +1,10 @@
 import { WebSocketServer } from 'ws';
-import { nanoid } from 'nanoid/non-secure';
+import { customAlphabet } from 'nanoid/non-secure';
 import gameSetup from './gameSetup.js';
 import playerSetup from './playerSetup.js';
 import { ballUpdate, playerUpdate } from './updateMethods.js';
+
+const nanoid = customAlphabet('1234567890', 6);
 
 const setupSocketServer = (server) => {
     const wss = new WebSocketServer({ server, clientTracking: true });
@@ -11,7 +13,7 @@ const setupSocketServer = (server) => {
 
     wss.on('connection', (socket, request) => {
         if (request.url === '/start') {
-            const gameID = nanoid(6);
+            const gameID = nanoid();
             games[gameID] = gameSetup(socket, gameID);
             socket.send(JSON.stringify({ gameID })); // here
             playerSetup(games[gameID], 'playerOne');
