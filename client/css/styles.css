@@ -1,15 +1,184 @@
+/* reset */
+
+/* 1. Use a more-intuitive box-sizing model. */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+/* 2. Remove default margin */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+}
+/* 3. Allow percentage-based heights in the application */
+html, body {
+    height: 100%;
+}
+/* Typographic tweaks!
+4. Add accessible line-height
+5. Improve text rendering */
+body {
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+/* 6. Improve media defaults */
+img, picture, video, canvas, svg {
+    display: block;
+    max-width: 100%;
+}
+/* 7. Remove built-in form typography styles */
+input, button, textarea, select {
+    font: inherit;
+}
+/* Avoid text overflows */
+p, h1, h2, h3, h4, h5, h6 {
+    overflow-wrap: break-word;
+}
+
+/* variables */
+
+:root {
+    --pongBlack: #252525;
+    --borderGrey: #5f5f5f;
+    --textPrimary: #cccccc;
+    --textSecondary: #999999;
+}    
+
+/* fonts */
+
+@font-face {
+    font-family: 'Silkscreen Regular';
+    src: url(../assets/Silkscreen-Regular.ttf);
+}
+h1, h2, h3, h4 {
+    color: var(--textPrimary);
+    font-weight: normal;
+    line-height: 1.4em;
+}
+p, a, li {
+    color: var(--textPrimary);
+    line-height: 1.4em;
+    font-size: 1em;
+}
+h1, h3 {
+    font-size: 1.2em;
+}
+h2 {
+    font-size: 1.6em;
+}
+h4 {
+    font-size: 1.1em;
+}
+
+/* base style */
+
+body {
+font-family: 'Silkscreen Regular';
+overflow-x: hidden;
+background: var(--pongBlack);
+}
+.button {
+    background: black;
+    border: 2px solid var(--borderGrey);
+    color: var(--textPrimary);
+    text-transform: uppercase;
+    display: inline-block;
+    font-size: 1.3em;
+}
+.button:hover {
+    background: var(--textSecondary);
+    color: var(--pongBlack);
 }
 
 #GameScreen {
-    border: 5px solid grey;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    border: 5px solid var(--borderGrey);
     max-width: 100%;
     max-height: 100%;
+    display: none;
+}    
+
+/* mobile styles */
+
+.header {
+    background: black;
+    color: var(--textPrimary);
+    font-size: 2.5em;
+    text-align: center;
+    height: 80px;
 }
+
+.header h2 {
+    margin-top: -15px;
+}
+
+.header a {
+    text-decoration: none;
+}
+
+.menu {
+    padding: 10px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.menu .button {
+    width: 90%;
+    max-width: 300px;
+}
+
+form {
+    width: 100%;
+    color: var(--textPrimary);
+    margin-top: 50px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    display: none;
+} 
+
+form label {
+    width: 100%;
+    text-align: center;
+}
+
+form input {
+    background: black;
+    border: 2px solid var(--borderGrey);
+    color: var(--textPrimary);
+    width: 70%;
+    max-width: 100px;
+    margin-bottom: 20px;
+}
+
+form .button {
+    align-self: flex-end;
+}
+
+.gameContainer {
+    margin-top: 20px;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.joinLink {
+    display: none;
+    max-width: 510px;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: space-between;
+}
+
+.joinLink p {
+    overflow-wrap: anywhere;
+}
+
+
+/* small tablet styles */
+
+/* large tablet & laptop styles */
+
+/* desktop styles */
