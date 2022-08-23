@@ -40,6 +40,8 @@ export default class ServerConnection {
                 const parsedData = JSON.parse(event.data);
                 if ('gameID' in parsedData) {
                     this.game.gameID = parsedData.gameID;
+                    const linkUrl = document.getElementById('LinkUrl');
+                    linkUrl.innerText = `${window.location.href}join/${parsedData.gameID}`;
                 }
                 if ('opponentConnected' in parsedData) {
                     this.game.opponentConnected = true;
