@@ -7,10 +7,13 @@ if (window.location.href.indexOf('/join/') !== -1) {
 }
 
 window.addEventListener('load', () => {
-    const player1Button = document.getElementById('Player1Button');
-    const joinButton = document.getElementById('JoinButton');
+    const newGameButton = document.getElementById('StartNewGameButton');
+    const joinButton = document.getElementById('JoinGameButton');
     const idBox = document.getElementById('IDBox');
-    const mainForm = document.getElementById('MainForm');
+    const idForm = document.getElementById('IDForm');
+    const menu = document.getElementById('Menu');
+    const joinLink = document.getElementById('JoinLink');
+    const linkButton = document.getElementById('LinkButton');
     const gameScreen = document.getElementById('GameScreen');
     const context = gameScreen.getContext('2d');
     gameScreen.height = 700;
@@ -30,24 +33,42 @@ window.addEventListener('load', () => {
     };
 
     if (urlID !== '') {
+        gameScreen.style.display = 'inline-block';
         game = new PlayerTwo(gameScreen.height, gameScreen.width, urlID);
-        player1Button.remove();
-        mainForm.remove();
+        menu.remove();
         animate(0);
     }
-    // this is a mess.
 
     const initGame = (user, gameID) => {
+        gameScreen.style.display = 'inline-block';
         if (user === 'playerOne') {
             game = new PlayerOne(gameScreen.height, gameScreen.width);
+            joinLink.style.display = 'flex';
         } else if (user === 'playerTwo') {
             game = new PlayerTwo(gameScreen.height, gameScreen.width, gameID);
         }
-        player1Button.remove();
-        mainForm.remove();
+        menu.remove();
         animate(0);
     };
 
-    player1Button.onclick = () => { initGame('playerOne'); };
-    joinButton.onclick = () => { initGame('playerTwo', idBox.value); };
+    const showIDBox = () => {
+        menu.remove();
+        idForm.style.display = 'flex';
+        const joinStart = document.getElementById('JoinWithID');
+        joinStart.onclick = () => {
+            initGame('playerTwo', idBox.value);
+            idForm.remove();
+        };
+    };
+
+    newGameButton.onclick = () => { initGame('playerOne'); };
+    joinButton.onclick = () => { showIDBox(); };
+    linkButton.onclick = () => {
+        const joinUrl = document.getElementById('LinkUrl').innerText;
+        navigator.clipboard.writeText(joinUrl);
+        linkButton.innerText = 'Copied!';
+        setTimeout(() => {
+            linkButton.innerText = 'Copy URL';
+        }, 500);
+    };
 });
